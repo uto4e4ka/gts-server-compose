@@ -1,0 +1,53 @@
+services:
+  gateway:
+    image: uto4ka404/gateway:latest  # Используем ваш логин на Docker Hub
+    ports:
+      - "8080:8080"  # Прокидываем порт только для Gateway
+    networks:
+      - gts-network
+    depends_on:
+      - eureka
+    command: ["sh", "-c", "until curl -s http://eureka:8761/eureka/; do echo waiting for eureka; sleep 2; done; java -jar /app.jar"]
+    environment:
+      - EUREKA_SERVER_URL=http://eureka:8761/eureka
+      - DB_URL=jdbc:mysql://37.140.192.158:3306/u1328132_gts2
+      - DB_USERNAME=u1328132_default
+      - DB_PASSWORD=Xyj_8oQ0
+
+  auth-service:
+    image: uto4ka404/auth-service:latest  # Используем ваш логин на Docker Hub
+    networks:
+      - gts-network  # Подключаем к сети gts-network
+    depends_on:
+      - eureka
+    command: ["sh", "-c", "until curl -s http://eureka:8761/eureka/; do echo waiting for eureka; sleep 2; done; java -jar /app.jar"]
+    environment:
+      - EUREKA_SERVER_URL=http://eureka:8761/eureka  # Передаем адрес Eureka как переменную окружения
+      - DB_URL=jdbc:mysql://37.140.192.158:3306/u1328132_gts2
+      - DB_USERNAME=u1328132_default
+      - DB_PASSWORD=Xyj_8oQ0
+
+  eureka:
+    image: uto4ka404/eureka:latest  # Используем ваш логин на Docker Hub
+    networks:
+      - gts-network  # Подключаем к сети gts-network
+    ports:
+      - "8761:8761"  # Прокидываем порт для Eureka
+
+  work-service:
+    image: uto4ka404/work-service:latest  # Используем ваш логин на Docker Hub
+    depends_on:
+      - auth-service  # Зависит от auth-service
+      - eureka
+    networks:
+      - gts-network  # Подключаем к той же сети gts-network
+    environment:
+      - EUREKA_SERVER_URL=http://eureka:8761/eureka  # Передаем адрес Eureka как переменную окружения
+      - DB_URL=jdbc:mysql://37.140.192.158:3306/u1328132_gts2
+      - DB_USERNAME=u1328132_default
+      - DB_PASSWORD=Xyj_8oQ0
+    command: ["sh", "-c", "until curl -s http://eureka:8761/eureka/; do echo waiting for eureka; sleep 2; done; java -jar /app.jar"]
+
+networks:
+  gts-network:
+    driver: bridge  # Указываем, что сеть будет bridge
