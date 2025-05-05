@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: gateway-service:latest  # Используем ваш логин на Docker Hub
+    image: uto4ka404/gateway-service:latest  # Используем ваш логин на Docker Hub
     ports:
       - "8080:8080"  # Прокидываем порт только для Gateway
     networks:
@@ -14,7 +14,7 @@ services:
       - DB_PASSWORD=Xyj_8oQ0
 
   auth-service:
-    image: auth-service:latest  # Используем ваш логин на Docker Hub
+    image: uto4ka404/auth-service:latest  # Используем ваш логин на Docker Hub
     networks:
       - gts-network  # Подключаем к сети gts-network
     depends_on:
@@ -26,14 +26,14 @@ services:
       - DB_PASSWORD=Xyj_8oQ0
 
   eureka:
-    image: eureka-service:latest  # Используем ваш логин на Docker Hub
+    image: uto4ka404/eureka-service:latest  # Используем ваш логин на Docker Hub
     networks:
       - gts-network  # Подключаем к сети gts-network
     ports:
       - "8761:8761"  # Прокидываем порт для Eureka
 
   work-service:
-    image: work-service:latest  # Используем ваш логин на Docker Hub
+    image: uto4ka404/work-service:latest  # Используем ваш логин на Docker Hub
     depends_on:
       - auth-service  # Зависит от auth-service
       - eureka
