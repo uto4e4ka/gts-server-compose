@@ -7,6 +7,7 @@ services:
       - gts-network
     depends_on:
       - eureka
+    mem_limit: 1g      
     environment:
       - EUREKA_SERVER_URL=http://eureka:8761/eureka
       - DB_URL=jdbc:mysql://37.140.192.158:3306/u1328132_gts2
@@ -19,6 +20,7 @@ services:
       - gts-network  # Подключаем к сети gts-network
     depends_on:
       - eureka
+    mem_limit: 1g      
     environment:
       - EUREKA_SERVER_URL=http://eureka:8761/eureka  # Передаем адрес Eureka как переменную окружения
       - DB_URL=jdbc:mysql://37.140.192.158:3306/u1328132_gts2
@@ -29,6 +31,7 @@ services:
     image: uto4ka404/eureka-service:latest  # Используем ваш логин на Docker Hub
     networks:
       - gts-network  # Подключаем к сети gts-network
+    mem_limit: 1g      
     ports:
       - "8761:8761"  # Прокидываем порт для Eureka
 
@@ -37,6 +40,7 @@ services:
     depends_on:
       - auth-service  # Зависит от auth-service
       - eureka
+    mem_limit: 1g      
     networks:
       - gts-network  # Подключаем к той же сети gts-network
     environment:
